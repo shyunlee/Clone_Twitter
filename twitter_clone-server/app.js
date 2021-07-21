@@ -4,6 +4,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import helmet from 'helmet'
 import tweetsRouter from './router/tweets.js'
+import authRouter from './router/auth.js'
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/tweets', tweetsRouter)
+app.use('/auth', authRouter)
 
 app.use((err, req, res, next) => {
     console.error(err)
