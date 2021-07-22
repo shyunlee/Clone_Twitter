@@ -23,6 +23,7 @@ export const signup = async (req, res) => {
         password: hashed,
     }
     const userId = await authRepo.createUser(newUserInfo)
+    console.log(userId)
     const token = createJwtToken(userId)
     res.status(201).json({data: {token, username}, message:'Signup Completed'})
 }
@@ -40,10 +41,12 @@ export const login = async (req, res) => {
     res.status(401).json({message:'login info is invaild'})
 }
 
-export const me = (req, res) => {
-    console.log(req.headers)
-    res.status(200).json({message:'me'})
-
+export const me = async (req, res) => {
+    const userFound = await authRepo.findById(req.userId)
+    if (!userFound) {
+        return res.status(404).json({message: 'User not found'})
+    }
+    res.status(200).json({username:userFound.username})
 }
 
 function createJwtToken (id) {

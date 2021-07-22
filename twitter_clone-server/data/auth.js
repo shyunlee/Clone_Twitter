@@ -1,10 +1,19 @@
 let users = [
     {
-        id:'3',
-        username:'steve',
-        name:'Steve',
+        id:'1',
+        username:'sean',
+        name:'Sean',
         password:'1231241',
-        email:'steve@gmail.com',
+        email:'test@gmail.com',
+        url:"https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg",
+        createdAt: new Date().toString()
+    },
+    {
+        id:'2',
+        username:'jisoo',
+        name:'Jisoo',
+        password:'321321',
+        email:'jisoo@gmail.com',
         url:"https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg",
         createdAt: new Date().toString()
     }
@@ -12,6 +21,10 @@ let users = [
 
 export async function findByUsername (username) {
     return users.find(user => user.username === username)
+}
+
+export async function findById (id) {
+    return users.find(user => user.id === id)
 }
 
 export async function createUser (userInfo) {

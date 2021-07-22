@@ -13,7 +13,6 @@ export async function getTweets (req, res) {
 }
 
 export async function createTweet (req, res) {
-    console.log(req.body)
     try {
         const newTweet = await tweetRepo.create(req.body)
         res.status(201).json(newTweet)

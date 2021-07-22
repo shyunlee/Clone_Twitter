@@ -3,7 +3,7 @@ import 'express-async-errors'
 import cors from 'cors'
 import morgan from 'morgan'
 import helmet from 'helmet'
-import tweetsRouter from './router/tweets.js'
+import tweetsRouter from './router/tweet.js'
 import authRouter from './router/auth.js'
 
 const app = express()
