@@ -22,6 +22,6 @@ router.post("/", isAuth, validateTweet, tweetController.createTweet);
 router.get("/:id", isAuth, tweetController.getTweetById)
 router.put("/:id", isAuth, validateTweet, tweetController.updateTweet);
 
-router.delete("/:id",  tweetController.deleteTweet);
+router.delete("/:id", isAuth, tweetController.deleteTweet);
 
 export default router;
