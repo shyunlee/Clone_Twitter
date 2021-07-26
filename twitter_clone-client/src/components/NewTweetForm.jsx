@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 
-const NewTweetForm = ({ tweetService, onError, onCreated }) => {
+const NewTweetForm = ({ tweetService, onError, onCreated, user }) => {
   const [tweet, setTweet] = useState('');
-
   const onSubmit = async (event) => {
     event.preventDefault();
     tweetService
-      .postTweet(tweet)
+      .postTweet(tweet, user.username)
       .then((created) => {
         setTweet('');
         onCreated(created);

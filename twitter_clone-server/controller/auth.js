@@ -23,26 +23,29 @@ export const signup = async (req, res) => {
         password: hashed,
     }
     const userId = await authRepo.createUser(newUserInfo)
-    console.log(userId)
     const token = createJwtToken(userId)
-    res.status(201).json({data: {token, username}, message:'Signup Completed'})
+    res.status(201).json({token, username})
+// }
 }
 
 export const login = async (req, res) => {
     const {username, password} = req.body
     const userFound = await authRepo.findByUsername(username)
+    console.log('login', userFound)
     if (userFound) {
         const isMatched = await bcrypt.compare(password, userFound.password)
         if (isMatched) {
             const token = createJwtToken(userFound.id)
-            return res.status(200).json({data:{token, username}, message:'login succeded'})
+            return res.status(200).json({token, username})
         }
     }
     res.status(401).json({message:'login info is invaild'})
 }
 
 export const me = async (req, res) => {
+    console.log(req.userId)
     const userFound = await authRepo.findById(req.userId)
+    console.log(userFound)
     if (!userFound) {
         return res.status(404).json({message: 'User not found'})
     }

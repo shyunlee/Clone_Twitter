@@ -41,9 +41,10 @@ export async function updateTweet (req, res) {
         const updatedTweet = await tweetRepo.update(tweetId, text)
         res.status(200).json(updatedTweet)
     } catch (error) {
-        res.sendStatus(404)
+        res.status(404).json({ message: `Tweet not found: ${id}` })
     }
 }
+
 
 export async function deleteTweet (req, res) {
     try {

@@ -2,7 +2,7 @@ let users = [
     {
         id:'1',
         username:'sean',
-        name:'Sean',
+        name:'sean',
         password:'1231241',
         email:'test@gmail.com',
         url:"https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg",

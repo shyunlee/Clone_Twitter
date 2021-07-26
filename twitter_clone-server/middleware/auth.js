@@ -11,11 +11,11 @@ export async function isAuth (req, res, next) {
     const token = auth.split(' ')[1]
     jwt.verify(token, process.env.ACCESS_SECRET, async (err, decoded) => {
         if (err) {
-            return res.status(401).json({message: 'Authentication Error'})
+            return res.status(401).json({message: 'Authentication Error1'})
         }
         const userFound = await findById(decoded.id)
         if (!userFound) {
-            return res.status(401).json({message: 'Authentication Error'})
+            return res.status(401).json({message: 'Authentication Error2'})
         }
         req.userId = userFound.id
         next()

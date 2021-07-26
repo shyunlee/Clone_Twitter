@@ -47,6 +47,7 @@ let tweets = [
       id: Date.now().toString(),
       text,
       createdAt: new Date().toString(),
+      username,
       name,
       url,
       userId:id
@@ -57,15 +58,24 @@ let tweets = [
 
   export async function getById (tweetId) {
     return getAllTweets().then(tweetList => {
-      return tweetList.filter(tweet => tweet.id === tweetId)
+      return tweetList.filter(tweet => tweet.id === tweetId)[0]
     })  }
+
+  // export async function getById (tweetId) {
+  //   const found = tweets.find(tweet => tweet.id === tweetId)
+  //   if (!found) {
+  //     return null
+  //   }
+  //   const {username, name, url} = await authRepo.findById(found.userId)
+  //   return {...found, username, name, url}
+  //   }
 
   export async function update (tweetId, text) {
       const tweetFound = tweets.find((tweet) => tweet.id === tweetId)
       if (tweetFound) {
         tweetFound.text = text
       }
-      return getById(tweetId)
+      return getById(tweetFound.id)
   }
 
   export async function remove (tweetId) {

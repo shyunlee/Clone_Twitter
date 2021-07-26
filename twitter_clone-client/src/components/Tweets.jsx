@@ -34,7 +34,7 @@ const Tweets = memo(({ tweetService, username, addable }) => {
     tweetService
       .updateTweet(tweetId, text)
       .then((updated) =>
-        setTweets((tweets) =>
+          setTweets((tweets) =>
           tweets.map((item) => (item.id === updated.id ? updated : item))
         )
       )
@@ -56,6 +56,7 @@ const Tweets = memo(({ tweetService, username, addable }) => {
           tweetService={tweetService}
           onError={onError}
           onCreated={onCreated}
+          user = {user}
         />
       )}
       {error && <Banner text={error} isAlert={true} transient={true} />}
