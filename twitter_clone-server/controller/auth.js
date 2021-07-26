@@ -1,15 +1,8 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import dotenv from 'dotenv'
 import * as authRepo from '../data/auth.js'
-
-dotenv.config()
-
-const accessKey = process.env.ACCESS_SECRET
-const refreshKey = process.env.REFRESH_SECRET
-const bcryptSaltRounds = 12
-const jwtExpDay = '2d'
+import { config } from '../config.js'
 
 export const signup = async (req, res) => {
     const {username, password} = req.body
@@ -17,7 +10,7 @@ export const signup = async (req, res) => {
     if (isRegistered) {
         return res.status(400).json({message:'user already registered'})
     }
-    let hashed = await bcrypt.hash(password, bcryptSaltRounds)
+    let hashed = await bcrypt.hash(password, config.bcrypt.saltRounds)
     const newUserInfo = {
         ...req.body,
         password: hashed,
@@ -53,5 +46,5 @@ export const me = async (req, res) => {
 }
 
 function createJwtToken (id) {
-    return jwt.sign({id}, accessKey, {expiresIn: jwtExpDay})
+    return jwt.sign({id}, config.jwt.accessSecret, {expiresIn: config.jwt.expiredInDay})
 }

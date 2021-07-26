@@ -55,6 +55,7 @@ export async function updateTweet (req, res) {
 
 export async function deleteTweet (req, res) {
     try {
+        const tweetId = req.params.id
         const tweet = await tweetRepo.getById(tweetId)
         if (!tweet) {
             return res.sendStatus(404)
@@ -65,6 +66,7 @@ export async function deleteTweet (req, res) {
         await tweetRepo.remove(req.params.id)
         res.sendStatus(204)
     } catch (error) {
+        console.log(error)
         res.sendStatus(404)
     }
 }

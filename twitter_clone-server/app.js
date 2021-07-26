@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import tweetsRouter from './router/tweet.js'
 import authRouter from './router/auth.js'
+import { config } from './config.js'
 
 const app = express()
 
@@ -14,10 +15,6 @@ app.use(helmet())
 app.use(cors())
 app.use(morgan('tiny'))
 
-app.get('/', (req, res) => {
-    res.send('hello')
-})
-
 app.use('/tweets', tweetsRouter)
 app.use('/auth', authRouter)
 
@@ -26,7 +23,7 @@ app.use((err, req, res, next) => {
     res.sendStatus(500)
 })
 
-app.listen(8080, () => {
-    console.log('server is on 8080')
+app.listen(config.host.port, () => {
+    console.log('server is on')
 })
 
