@@ -1,9 +1,11 @@
+// 123123  $2b$10$q5Ah/mQPGiqzZOl9ECIZfefqHx3JSHGCpp2raOMOgkaaqruEauly.
+// asdfasdf $2b$10$j.anSXAwnw6wMJdVCQcqouGTQx6AnOUzeEyUCtm0UaCJn5FVSZ74W
 let users = [
     {
         id:'1',
         username:'sean',
         name:'sean',
-        password:'1231241',
+        password:'$2b$10$q5Ah/mQPGiqzZOl9ECIZfefqHx3JSHGCpp2raOMOgkaaqruEauly.',
         email:'test@gmail.com',
         url:"https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg",
         createdAt: new Date().toString()
@@ -12,7 +14,7 @@ let users = [
         id:'2',
         username:'jisoo',
         name:'Jisoo',
-        password:'321321',
+        password:'$2b$10$j.anSXAwnw6wMJdVCQcqouGTQx6AnOUzeEyUCtm0UaCJn5FVSZ74W',
         email:'jisoo@gmail.com',
         url:"https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg",
         createdAt: new Date().toString()

@@ -24,7 +24,6 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     const {username, password} = req.body
     const userFound = await authRepo.findByUsername(username)
-    console.log('login', userFound)
     if (userFound) {
         const isMatched = await bcrypt.compare(password, userFound.password)
         if (isMatched) {
@@ -36,9 +35,7 @@ export const login = async (req, res) => {
 }
 
 export const me = async (req, res) => {
-    console.log(req.userId)
     const userFound = await authRepo.findById(req.userId)
-    console.log(userFound)
     if (!userFound) {
         return res.status(404).json({message: 'User not found'})
     }

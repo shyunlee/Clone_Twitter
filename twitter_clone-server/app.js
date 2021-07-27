@@ -6,6 +6,7 @@ import helmet from 'helmet'
 import tweetsRouter from './router/tweet.js'
 import authRouter from './router/auth.js'
 import { config } from './config.js'
+import { initSocket, getSocketIO } from './connection/socket.js'
 
 const app = express()
 
@@ -23,7 +24,9 @@ app.use((err, req, res, next) => {
     res.sendStatus(500)
 })
 
-app.listen(config.host.port, () => {
+const server = app.listen(config.host.port, () => {
     console.log('server is on')
 })
+initSocket(server)
+
 

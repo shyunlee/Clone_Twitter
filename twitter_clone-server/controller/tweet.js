@@ -1,3 +1,4 @@
+import { getSocketIO } from '../connection/socket.js'
 import * as tweetRepo from '../data/tweet.js'
 
 export async function getTweets (req, res) {
@@ -16,6 +17,7 @@ export async function createTweet (req, res) {
     try {
         const newTweet = await tweetRepo.create(req.body)
         res.status(201).json(newTweet)
+        getSocketIO().emit('tweets', newTweet)
     } catch (error) {
         res.sendStatus(404)
     }

@@ -9,9 +9,10 @@ export default class TweetService {
   //     url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
   //   },
   // ];
-  constructor (http, tokenStorage) {
-    this.http = http
-    this.tokenStorage = tokenStorage
+  constructor (http, tokenStorage, socket) {
+    this.http = http;
+    this.tokenStorage = tokenStorage;
+    this.socket = socket;
   }
 
   async getTweets(username) {
@@ -56,4 +57,7 @@ export default class TweetService {
     }
   }
 
+  onSync(callback) {
+    return this.socket.onSync('tweets', callback)
+  }
 }
