@@ -17,7 +17,7 @@ export async function createTweet (req, res) {
     try {
         const newTweet = await tweetRepo.create(req.body)
         res.status(201).json(newTweet)
-        getSocketIO().emit('tweets', newTweet)
+        getSocketIO().emit('tweets', {command:'create', data:newTweet})
     } catch (error) {
         res.sendStatus(404)
     }
@@ -49,6 +49,7 @@ export async function updateTweet (req, res) {
         }
         const updatedTweet = await tweetRepo.update(tweetId, text)
         res.status(200).json(updatedTweet)
+        getSocketIO().emit('tweets', {command:'update'})
     } catch (error) {
         res.status(404).json({ message: `Tweet not found: ${id}` })
     }
@@ -67,6 +68,7 @@ export async function deleteTweet (req, res) {
         }
         await tweetRepo.remove(req.params.id)
         res.sendStatus(204)
+        getSocketIO().emit('tweets', {command:'delete'})
     } catch (error) {
         console.log(error)
         res.sendStatus(404)
