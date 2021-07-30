@@ -1,60 +1,96 @@
-import * as authRepo from "../data/auth.js";
-import { db } from "../db/database.js";
+import SQ from "sequelize";
+import { sequelize } from "../db/database.js";
+import { User } from "./auth.js";
 
-const SELECT_JOIN = `SELECT tweets.id, tweets.text, tweets.userId, users.username, users.name, users.email, users.url FROM users INNER JOIN tweets ON users.id = tweets.userId`
-const ORDER_BY = 'ORDER BY tweets.createdAt DESC'
+const Sequelize = SQ.Sequelize;
+const DataTypes = SQ.DataTypes;
+
+const Tweet = sequelize.define("tweet", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    allowNull: false,
+    unique: true,
+    autoIncrement: true,
+  },
+  text: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+});
+Tweet.belongsTo(User);
+
+const SELECT_JOIN = `SELECT tweets.id, tweets.text, tweets.userId, users.username, users.name, users.email, users.url FROM users INNER JOIN tweets ON users.id = tweets.userId`;
+const ORDER_BY = "ORDER BY tweets.createdAt DESC";
+
+const INCLUDE_USER = {
+  attributes: [
+    "id",
+    "text",
+    "userId",
+    "createdAt",
+    [Sequelize.col("user.username"), "username"],
+    [Sequelize.col("user.name"), "name"],
+    [Sequelize.col("user.url"), "url"],
+  ],
+  include: {
+    model: User,
+    attributes: [],
+  }
+}
+
+const ORDER_DESC = {
+  order:[['createdAt', 'DESC']]
+}
 
 export async function getAllTweets() {
-  return db
-    .execute(
-      `${SELECT_JOIN} ${ORDER_BY}`
-    )
-    .then((result) => {
-      return result[0];
-    });
+  return Tweet.findAll({
+    ...INCLUDE_USER,
+    ...ORDER_DESC
+  }).then((result) => {
+    return result;
+  });
 }
 
 export async function getByUsername(username) {
-  return db
-    .execute(`${SELECT_JOIN} WHERE users.username = ? ${ORDER_BY}`, [username])
-    .then((result) => {
-      return result[0];
-    });
+  return Tweet.findAll({
+    ...INCLUDE_USER,
+    ...ORDER_DESC,
+    include:{
+      ...INCLUDE_USER.include,
+      where:{username}
+    }
+  }).then(result => {
+    return result
+  })
 }
 
-export async function create({text, username}) {
-  const { id } = await authRepo.findByUsername(username);
-  return db
-    .execute(`
-      INSERT INTO tweets (text, createdAt, userId) VALUES (?, ?, ?)
-    `, [text, new Date(), id])
-    .then((result) => {
-      return getById(result[0].insertId)
-    })
+export async function create({ text, userId }) {
+  return Tweet.create({ text, userId }).then(result => {
+    console.log('UserID At create', userId)
+    return this.getById(result.id)
+  });
 }
 
 export async function getById(tweetId) {
-  return db
-    .execute(`${SELECT_JOIN} WHERE tweets.id=? ${ORDER_BY}`, [tweetId])
-    .then(result => {
-      return result[0][0]
-    })
+  return Tweet.findOne({
+    ...INCLUDE_USER,
+    ...ORDER_DESC,
+    where:{id:tweetId}
+  })
 }
 
 export async function update(tweetId, text) {
-  return db
-    .execute(`
-      UPDATE tweets
-      SET text=?
-      WHERE id=?
-    `, [text, tweetId])
-    .then(() => {
-      return getById(tweetId)
+  return Tweet.findByPk(tweetId, INCLUDE_USER)
+    .then(result => {
+      result.text = text
+      return result.save()
     })
 }
 
 export async function remove(tweetId) {
-  db.execute(`
-    DELETE FROM tweets WHERE id=?
-  `, [tweetId])
+  return Tweet.findByPk(tweetId)
+    .then(result => {
+      result.destroy()
+    })
 }

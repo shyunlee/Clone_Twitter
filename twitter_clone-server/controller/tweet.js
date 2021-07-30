@@ -67,8 +67,7 @@ export async function deleteTweet (req, res) {
             return res.sendStatus(403)
         }
         await tweetRepo.remove(tweetId)
-        // res.sendStatus(204)
-        res.status(200)
+        res.sendStatus(200)
         getSocketIO().emit('tweets', {command:'delete', data:Number(tweetId)})
     } catch (error) {
         console.log(error)

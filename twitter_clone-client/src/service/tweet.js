@@ -14,9 +14,9 @@ export default class TweetService {
     })
   }
 
-  async postTweet(text, username) {
+  async postTweet(text, userId) {
     const tweet = {
-      username,
+      userId,
       text,
     }
     return this.http.fetch(`/tweets`, {

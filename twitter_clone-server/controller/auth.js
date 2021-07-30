@@ -17,7 +17,7 @@ export const signup = async (req, res) => {
     }
     const userId = await authRepo.createUser(newUserInfo)
     const token = createJwtToken(userId)
-    res.status(201).json({token, username})
+    res.status(201).json({token, userId, username})
 // }
 }
 
@@ -28,7 +28,8 @@ export const login = async (req, res) => {
         const isMatched = await bcrypt.compare(password, userFound.password)
         if (isMatched) {
             const token = createJwtToken(userFound.id)
-            return res.status(200).json({token, username})
+            const userId = userFound.id
+            return res.status(200).json({token, userId, username})
         }
     }
     res.status(401).json({message:'login failed'})
@@ -39,7 +40,8 @@ export const me = async (req, res) => {
     if (!userFound) {
         return res.status(404).json({message: 'User not found'})
     }
-    res.status(200).json({username:userFound.username})
+    console.log('USER FOUND', userFound)
+    res.status(200).json({username:userFound.username, userId:userFound.id})
 }
 
 function createJwtToken (id) {
