@@ -4,7 +4,7 @@ import Avatar from './Avatar';
 import EditTweetForm from './EditTweetForm';
 
 const TweetCard = memo(
-  ({ tweet, owner, onDelete, onUpdate, onUsernameClick }) => {
+  ({ tweet, owner, tweetService, onUsernameClick }) => {
     const { id, username, name, url, text, createdAt } = tweet;
     const [editing, setEditing] = useState(false);
     const onClose = () => setEditing(false);
@@ -26,7 +26,7 @@ const TweetCard = memo(
             {editing && (
               <EditTweetForm
                 tweet={tweet}
-                onUpdate={onUpdate}
+                tweetService={tweetService}
                 onClose={onClose}
               />
             )}
@@ -34,7 +34,7 @@ const TweetCard = memo(
         </section>
         {owner && (
           <div className='tweet-action'>
-            <button className='tweet-action-btn' onClick={() => onDelete(id)}>
+            <button className='tweet-action-btn' onClick={() => tweetService.deleteTweet(id)}>
               x
             </button>
             <button

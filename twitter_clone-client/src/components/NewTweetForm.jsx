@@ -7,7 +7,7 @@ const NewTweetForm = ({ tweetService, onError, onCreated, user }) => {
     event.preventDefault();
     tweetService
       .postTweet(tweet, user.username)
-      .then((created) => {
+      .then(() => {
         setTweet('');
         // onCreated(created); ----> socket 으로 연결하여서 새로운 tweet이 생길때 자동으로 실시간 업뎃으로 추가되는 기능 추가되서 필요 없음
       })

@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
 })
 
 
-db.getConnection().then((connection) => console.log(connection))
+db.getConnection().then((connection) => console.log('DataBase Connected'))
 
 const server = app.listen(config.host.port, () => {
     console.log('server is on')

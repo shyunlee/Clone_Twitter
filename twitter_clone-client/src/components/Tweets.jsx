@@ -20,11 +20,11 @@ const Tweets = memo(({ tweetService, username, addable }) => {
     const stopSync = tweetService.onSync((socket) => {
       if (socket.command === 'create') {
         onCreated(socket.data)
-      } else if (socket.command === 'update' || socket.command === 'delete') {
-        tweetService
-          .getTweets(username)
-          .then((tweets) => setTweets([...tweets]))
-          .catch(onError);
+      }
+       else if (socket.command === 'update') {
+        onUpdate(socket.data)
+      } else if (socket.command === 'delete') {
+        onDelete(socket.data)
       }
     })
 
@@ -35,23 +35,13 @@ const Tweets = memo(({ tweetService, username, addable }) => {
     setTweets((tweets) => [tweet, ...tweets]);
   };
 
-  const onDelete = (tweetId) =>
-    tweetService
-      .deleteTweet(tweetId)
-      .then(() =>
-        setTweets((tweets) => tweets.filter((tweet) => tweet.id !== tweetId))
-      )
-      .catch((error) => setError(error.toString()));
+  const onDelete = (tweetId) => {
+    setTweets((tweets) => tweets.filter(item => item.id !== tweetId))
+  }
 
-  const onUpdate = (tweetId, text) =>
-    tweetService
-      .updateTweet(tweetId, text)
-      .then((updated) =>
-          setTweets((tweets) =>
-          tweets.map((item) => (item.id === updated.id ? updated : item))
-        )
-      )
-      .catch((error) => error.toString());
+  const onUpdate = (updated) => {
+    setTweets((tweets) => tweets.map((item) => (item.id === updated.id ? updated : item)))
+  }
 
   const onUsernameClick = (tweet) => history.push(`/${tweet.username}`);
 
@@ -80,8 +70,7 @@ const Tweets = memo(({ tweetService, username, addable }) => {
             key={tweet.id}
             tweet={tweet}
             owner={tweet.username === user.username}
-            onDelete={onDelete}
-            onUpdate={onUpdate}
+            tweetService={tweetService}
             onUsernameClick={onUsernameClick}
           />
         ))}

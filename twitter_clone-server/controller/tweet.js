@@ -49,9 +49,9 @@ export async function updateTweet (req, res) {
         }
         const updatedTweet = await tweetRepo.update(tweetId, text)
         res.status(200).json(updatedTweet)
-        getSocketIO().emit('tweets', {command:'update'})
+        getSocketIO().emit('tweets', {command:'update', data:updatedTweet})
     } catch (error) {
-        res.status(404).json({ message: `Tweet not found: ${id}` })
+        res.status(404).json({ message: `Tweet not found: ${tweetId}` })
     }
 }
 
@@ -66,9 +66,10 @@ export async function deleteTweet (req, res) {
         if (tweet.userId !== req.userId) {
             return res.sendStatus(403)
         }
-        await tweetRepo.remove(req.params.id)
-        res.sendStatus(204)
-        getSocketIO().emit('tweets', {command:'delete'})
+        await tweetRepo.remove(tweetId)
+        // res.sendStatus(204)
+        res.status(200)
+        getSocketIO().emit('tweets', {command:'delete', data:Number(tweetId)})
     } catch (error) {
         console.log(error)
         res.sendStatus(404)

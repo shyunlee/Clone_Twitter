@@ -16,7 +16,7 @@ export default class HttpClient {
         try {
             data = await response.json()
         } catch (error) {
-            console.log(error)
+            console.log('ERROR', error)
         }
 
         if (response.status > 299 || response.status < 200) {

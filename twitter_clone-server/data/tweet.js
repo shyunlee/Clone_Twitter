@@ -1,83 +1,60 @@
-import * as authRepo from '../data/auth.js'
+import * as authRepo from "../data/auth.js";
+import { db } from "../db/database.js";
 
-let tweets = [
-    {
-      id: '1',
-      text: '드림코딩에서 강의 들으면 너무 좋으다',
-      createdAt: '2021-05-09T04:20:57.000Z',
-      // name: 'Bob',
-      // username: 'bob',
-      // url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
-      userId:'1'
-    },
-    {
-      id: '2',
-      text: 'hello world!',
-      createdAt: '2021-05-10T04:20:37.000Z',
-      // name: 'Jisoo',
-      // username: 'jisoo',
-      // url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
-      userId:'2'
-    },
-  ]
+const SELECT_JOIN = `SELECT tweets.id, tweets.text, tweets.userId, users.username, users.name, users.email, users.url FROM users INNER JOIN tweets ON users.id = tweets.userId`
+const ORDER_BY = 'ORDER BY tweets.createdAt DESC'
 
-  export async function getAllTweets () {
-    return Promise.all(
-      tweets.map(async (tweet) => {
-        const {username, name, url} = await authRepo.findById(tweet.userId)
-        return {
-          ...tweet,
-          username,
-          name,
-          url
-        }
-      })
+export async function getAllTweets() {
+  return db
+    .execute(
+      `${SELECT_JOIN} ${ORDER_BY}`
     )
-  }
+    .then((result) => {
+      return result[0];
+    });
+}
 
-  export async function getByUsername (username) {
-    return getAllTweets().then(tweetList => {
-      return tweetList.filter(tweet => tweet.username === username)
+export async function getByUsername(username) {
+  return db
+    .execute(`${SELECT_JOIN} WHERE users.username = ? ${ORDER_BY}`, [username])
+    .then((result) => {
+      return result[0];
+    });
+}
+
+export async function create({text, username}) {
+  const { id } = await authRepo.findByUsername(username);
+  return db
+    .execute(`
+      INSERT INTO tweets (text, createdAt, userId) VALUES (?, ?, ?)
+    `, [text, new Date(), id])
+    .then((result) => {
+      return getById(result[0].insertId)
     })
-  }
+}
 
-  export async function create ({text, username}) {
-    const {name, id, url} = await authRepo.findByUsername(username)
-    const newTweet = {
-      id: Date.now().toString(),
-      text,
-      createdAt: new Date().toString(),
-      username,
-      name,
-      url,
-      userId:id
-    }
-    tweets = [newTweet, ...tweets]
-    return newTweet
-  }
+export async function getById(tweetId) {
+  return db
+    .execute(`${SELECT_JOIN} WHERE tweets.id=? ${ORDER_BY}`, [tweetId])
+    .then(result => {
+      return result[0][0]
+    })
+}
 
-  export async function getById (tweetId) {
-    return getAllTweets().then(tweetList => {
-      return tweetList.filter(tweet => tweet.id === tweetId)[0]
-    })  }
+export async function update(tweetId, text) {
+  return db
+    .execute(`
+      UPDATE tweets
+      SET text=?
+      WHERE id=?
+    `, [text, tweetId])
+    .then(() => {
+      return getById(tweetId)
+    })
+}
 
-  // export async function getById (tweetId) {
-  //   const found = tweets.find(tweet => tweet.id === tweetId)
-  //   if (!found) {
-  //     return null
-  //   }
-  //   const {username, name, url} = await authRepo.findById(found.userId)
-  //   return {...found, username, name, url}
-  //   }
-
-  export async function update (tweetId, text) {
-      const tweetFound = tweets.find((tweet) => tweet.id === tweetId)
-      if (tweetFound) {
-        tweetFound.text = text
-      }
-      return getById(tweetFound.id)
-  }
-
-  export async function remove (tweetId) {
-      tweets = tweets.filter((tweet) => tweet.id !== tweetId)
-  }
+export async function remove(tweetId) {
+  db.execute(`
+    DELETE FROM tweets WHERE id=?
+  `, [tweetId])
+}

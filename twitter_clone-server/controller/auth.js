@@ -31,7 +31,7 @@ export const login = async (req, res) => {
             return res.status(200).json({token, username})
         }
     }
-    res.status(401).json({message:'login info is invaild'})
+    res.status(401).json({message:'login failed'})
 }
 
 export const me = async (req, res) => {
