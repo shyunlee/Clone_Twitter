@@ -17,6 +17,7 @@ export async function isAuth (req, res, next) {
             return res.status(401).json({message: 'Authentication Error2'})
         }
         req.userId = userFound.id
+        req.token = token
         next()
     })
 }

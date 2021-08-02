@@ -27,5 +27,8 @@ export const config = {
         database: required('DB_NAME'),
         host: required('DB_HOST', 'localhost'),
         port: parseInt(required('DB_PORT'), 3306),
+    },
+    cors:{
+        allowedOrigin: required('CORS_ALLOW_ORIGIN')
     }
 }

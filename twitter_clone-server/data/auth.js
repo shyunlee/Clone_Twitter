@@ -1,4 +1,4 @@
-import { db, sequelize } from '../db/database.js'
+import { sequelize } from '../db/database.js'
 import SQ from 'sequelize'
 
 const DataTypes = SQ.DataTypes

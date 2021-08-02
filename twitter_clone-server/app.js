@@ -7,14 +7,19 @@ import tweetsRouter from './router/tweet.js'
 import authRouter from './router/auth.js'
 import { config } from './config.js'
 import { initSocket } from './connection/socket.js'
-import { db, sequelize } from './db/database.js'
+import { sequelize } from './db/database.js'
 
 const app = express()
+
+const corsOption = {
+    origin: config.cors.allowedOriginm,
+    optionsSuccessStatus:200,
+}
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(helmet())
-app.use(cors())
+app.use(cors(corsOption))
 app.use(morgan('tiny'))
 
 app.use('/tweets', tweetsRouter)
@@ -25,12 +30,9 @@ app.use((err, req, res, next) => {
     res.sendStatus(500)
 })
 
-
-db.getConnection().then((connection) => console.log('DataBase Connected'))
-
 sequelize.sync().then(client => {
     const server = app.listen(config.host.port, () => {
-        console.log('server is on')
+        console.log(`server is on-T[${new Date()}]`)
     })
     initSocket(server)
 })

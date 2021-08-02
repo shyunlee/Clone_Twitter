@@ -40,8 +40,7 @@ export const me = async (req, res) => {
     if (!userFound) {
         return res.status(404).json({message: 'User not found'})
     }
-    console.log('USER FOUND', userFound)
-    res.status(200).json({username:userFound.username, userId:userFound.id})
+    res.status(200).json({username:userFound.username, userId:userFound.id, token:req.token})
 }
 
 function createJwtToken (id) {
