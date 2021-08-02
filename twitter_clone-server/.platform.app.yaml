@@ -36,7 +36,7 @@ relationships:
 
 web:
   commands: 
-    start: "node index.js"
+    start: "node app.js"
 
   locations:
     '/':
