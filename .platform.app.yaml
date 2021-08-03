@@ -36,7 +36,7 @@ relationships:
 
 web:
   commands: 
-    start: "node app.js"
+    start: "node ./twitter_clone-server/app.js"
 
   locations:
     '/':
