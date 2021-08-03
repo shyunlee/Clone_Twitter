@@ -15,9 +15,7 @@ const corsOption = {
     origin: config.cors.allowedOrigin,
     optionsSuccessStatus:200,
 }
-app.get('/', (req, res) => {
-    res.send('hello')
-})
+
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(helmet())
@@ -33,7 +31,6 @@ app.use((err, req, res, next) => {
 })
 
 sequelize.sync().then(client => {
-    console.log(client)
     const server = app.listen(config.host.port, () => {
         console.log(`server is on-T[${new Date()}]`)
     })
