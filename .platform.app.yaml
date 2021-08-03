@@ -37,7 +37,3 @@ relationships:
 web:
   commands: 
     start: "node ./twitter_clone-server/app.js"
-
-  locations:
-    '/':
-      passthru: true
