@@ -12,7 +12,7 @@ import { sequelize } from './db/database.js'
 const app = express()
 
 const corsOption = {
-    origin: config.cors.allowedOriginm,
+    origin: config.cors.allowedOrigin,
     optionsSuccessStatus:200,
 }
 
